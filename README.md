@@ -14,13 +14,13 @@ Ketiga skema melewati target akurasi 85%. LSTM cepat mengalami overfitting dan t
 
 ## Data
 
-- **Sumber:** ulasan Livin’ by Mandiri di Google Play Store, dikumpulkan dengan scraping (**[ISI library, misal google-play-scraper]**).
+- **Sumber:** ulasan Livin’ by Mandiri di Google Play Store, dikumpulkan dengan scraping  dengan menggunakan google-play-scraper.
 - **Jumlah:** 15.400 ulasan mentah.
 - **Pelabelan otomatis dari rating:** bintang 1–2 diberi label negatif, bintang 5 positif. Ulasan bintang 3–4 dibuang karena sentimennya ambigu.
 - **Data akhir:** 6.119 ulasan.
 - **Kelas timpang:** ulasan negatif sekitar 78%. Untuk mengatasinya dipakai `class_weight='balanced'`.
 - **Catatan data:** label dihasilkan otomatis dari rating, bukan dari anotasi manual, jadi ada ulasan yang labelnya tidak tepat (misalnya bintang rendah tetapi isinya netral).
-- **[ISI: sebutkan apakah dataset disertakan di repo. Jika ya, nama pengguna sudah dihapus. Jika tidak, tulis cara menjalankan ulang scraping.]**
+- dataset tersedia direpo dengan nama file ulasan aplikasi livin.csv
 
 ## Pendekatan yang dicoba dan tidak dipakai
 
@@ -32,16 +32,26 @@ Ketiga skema melewati target akurasi 85%. LSTM cepat mengalami overfitting dan t
 
 1. Scraping ulasan.
 2. Pelabelan dari rating dan pembuangan rating 3–4.
-3. Pra-pemrosesan teks (**[ISI langkahnya, misal: case folding, pembersihan, normalisasi kata, stopword, stemming]**).
+3. Pra-pemrosesan teks [case folding,normalisasi kata, tokenisasi, stopword, stemming, pembersihan akhir(menghapus data duplikat) ]
 4. Representasi teks: TF-IDF (dan TF-IDF n-gram) untuk model klasik, tokenisasi dan embedding untuk LSTM.
 5. Pelatihan dan pengujian tiga skema.
 6. Perbandingan hasil dan inference pada contoh ulasan baru.
 
 ## Hasil dan catatan
 
-- Pada data yang timpang, akurasi saja bisa menipu, karena model yang selalu menebak “negatif” pun sudah mendapat akurasi tinggi. ** **
-- LSTM mencapai akurasi yang sebanding dengan model klasik, tetapi lebih berat dilatih dan cepat overfit, jadi kelebihannya tidak terlihat pada ukuran data ini.
+| Skema | Algoritma | Fitur | Split | Akurasi latih | Akurasi uji | Macro F1 uji | Selisih latih-uji |
+|---|---|---|---|---|---|---|---|
+| 1 | Logistic Regression | TF-IDF | 80/20 | 0,9083 | 0,8595 | 0,8097 | 0,0488 |
+| 2 | SVM (LinearSVC) | TF-IDF n-gram (1,2) | 70/30 | 0,9680 | 0,8742 | 0,8216 | 0,0938 |
+| 3 | LSTM | Embedding | 80/20 | 0,9591 | 0,8709 | 0,8171 | 0,0882 |
 
+**Pembacaan hasil**
+
+- **Akurasi vs macro F1.** Macro F1 (sekitar 0,81–0,82) lebih rendah dari akurasi uji (sekitar 0,86–0,87). Itu wajar karena kelas timpang (negatif sekitar 78%): akurasi cenderung terlihat lebih baik dari kemampuan model pada kelas positif yang lebih sedikit, sedangkan macro F1 memberi bobot sama pada kedua kelas.
+- **Model terbaik.** SVM dengan TF-IDF n-gram unggul tipis di akurasi uji (0,8742) dan macro F1 (0,8216). Selisih antarmodel kecil (sekitar 1,5 poin akurasi), jadi ketiganya bisa dianggap setara pada data ini.
+- **Overfitting.** Logistic Regression paling stabil (selisih latih-uji 0,0488). SVM dan LSTM punya selisih hampir dua kali lipat (sekitar 0,09), artinya keduanya lebih hafal data latih.
+- **LSTM** tidak mengungguli model klasik, tetapi lebih berat dilatih dan cepat overfit.
+- **Keterbatasan perbandingan.** Skema 2 memakai split 70/30, sedangkan skema lain 80/20, jadi perbandingannya tidak sepenuhnya setara. Label dihasilkan otomatis dari rating, sehingga sebagian label bisa tidak tepat.
 ## Struktur folder
 
 ```
