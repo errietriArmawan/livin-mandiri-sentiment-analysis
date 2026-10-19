@@ -39,24 +39,25 @@ Ketiga skema melewati target akurasi 85%. LSTM cepat mengalami overfitting dan t
 
 ## Hasil dan catatan
 
-- Pada data yang timpang, akurasi saja bisa menipu, karena model yang selalu menebak “negatif” pun sudah mendapat akurasi tinggi. **[ISI: tuliskan precision, recall, atau macro F1 per kelas dari notebook-mu agar hasilnya lebih jujur.]**
+- Pada data yang timpang, akurasi saja bisa menipu, karena model yang selalu menebak “negatif” pun sudah mendapat akurasi tinggi. ** **
 - LSTM mencapai akurasi yang sebanding dengan model klasik, tetapi lebih berat dilatih dan cepat overfit, jadi kelebihannya tidak terlihat pada ukuran data ini.
 
 ## Struktur folder
 
 ```
-[ISI sesuai folder submission-mu, misalnya:]
-├── notebook.ipynb
+livin-mandiri-sentiment-analysis
+├── pelatihan_model_sentimen.ipynb
+├── scraping_ulasan_livin.ipynb
 ├── requirements.txt
 ├── README.md
-└── [folder data atau model, jika ada]
+└── ulasan_aplikasi_livin.csv
 ```
 
 ## Cara menjalankan
 
 Notebook dijalankan di Google Colab.
 
-1. Buka `notebook.ipynb` di Colab.
+1. Buka `pelatihan_model_sentimen.ipynb` di Colab.
 2. Pasang paket pada `requirements.txt`: `pip install -r requirements.txt`.
 3. Jalankan seluruh sel dari atas ke bawah (**Restart session and run all**).
 
